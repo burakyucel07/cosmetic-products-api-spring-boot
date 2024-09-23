@@ -7,21 +7,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(path = "/products")
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
         return new ResponseEntity<List<Product>>(productService.getProducts(pageNumber, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping({"/{productId}", "/{productId}/"})
     public ResponseEntity<Product> getProduct(@PathVariable("productId") Long productId) {
         return new ResponseEntity<Product>(productService.getProduct(productId), HttpStatus.OK);
     }
@@ -31,14 +34,14 @@ public class ProductController {
         return new ResponseEntity<Product>(productService.addProduct(product), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "{productId}")
+    @DeleteMapping({"/{productId}", "/{productId}/"})
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("productId") Long productId) {
         productService.deleteProduct(productId);
 
         return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(path = "{productId}")
+    @PutMapping({"/{productId}", "/{productId}/"})
     public ResponseEntity<Product> updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product) {
         product.setId(productId);
         return new ResponseEntity<Product>(productService.updateProduct(product), HttpStatus.OK);

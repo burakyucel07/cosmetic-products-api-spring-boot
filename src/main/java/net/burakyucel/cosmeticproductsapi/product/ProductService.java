@@ -16,7 +16,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getProducts(@DefaultValue("0") int pageNumber, @DefaultValue("10") int pageSize) {
+    public List<Product> getProducts(int pageNumber, int pageSize) {
         Pageable pages = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id");
 
         return productRepository.findAll(pages).getContent();
@@ -37,7 +37,7 @@ public class ProductService {
 
         if (!exists) {
             throw new IllegalStateException(
-                    "Student with id " + productId + " does not exist");
+                    "Product with id " + productId + " does not exist");
         }
 
         productRepository.deleteById(productId);
@@ -50,7 +50,7 @@ public class ProductService {
     public Product getProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException(
-                        "Student with id " + productId + " does not exist"));
+                        "Product with id " + productId + " does not exist"));
 
         return product;
     }
